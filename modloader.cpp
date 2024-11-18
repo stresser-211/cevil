@@ -1,4 +1,7 @@
-﻿#include "__internal/preprocessor.hpp"
-API int test(void) {
-	return 0;
+﻿#define EXPORT
+#include "__internal/preprocessor.hpp"
+extern "C" {
+	API void init(void) {
+		return;
+	}
 }

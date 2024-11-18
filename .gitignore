@@ -1,5 +1,9 @@
-﻿__game
-.vs/
-out/
-tmp/
-CMakeSettings.json
+﻿tmp/
+CMakeFiles/
+CMakeLists.txt
+CMakeCache.txt
+*.ninja
+*.cmake
+.ninja_deps
+.ninja_log
+stacktrace.log
