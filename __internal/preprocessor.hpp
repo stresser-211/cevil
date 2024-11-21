@@ -79,4 +79,6 @@
 #else
 #define API DLLEXPORT
 #endif /* EXPORT */
+#define str_t char*
+#define cstr_t const char*
 #endif /* PREPROCESS_H */

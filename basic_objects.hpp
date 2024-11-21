@@ -1,7 +1,7 @@
 ﻿#ifndef BASIC_OBJECTS_H
 #define BASIC_OBJECTS_H
 #include "__internal/preprocessor.hpp"
-#include "__internal/types.hpp"
+#include "__internal/objects.hpp"
 #include "__internal/global.hpp"
 class texture {
 	SDL_Texture* txtr;
@@ -36,33 +36,6 @@ public:
 	}
 	void colmod(unsigned int hue = 0, unsigned int saturation = 0, unsigned int visibility = 0) {
 		return;
-	}
-};
-class window {
-	SDL_Window* win;
-	SDL_Renderer* rend;
-public:
-	window(cstr_t title) {
-		auto flags =  SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
-		using cfg = global::e_config;
-		if (global::config[cfg::fullscreen].second == 1) {
-			flags |= SDL_WINDOW_FULLSCREEN;
-		}
-		win = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, global::config[cfg::width].second, global::config[cfg::height].second, flags);
-		rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	}
-	~window(void) {
-		SDL_DestroyRenderer(rend);
-		SDL_DestroyWindow(win);
-	}
-	void render(void) {
-		return;
-	}
-	void rerender(void) {
-		return;
-	}
-	auto get_renderer(void) const {
-		return rend;
 	}
 };
 #endif /* BASIC_OBJECTS_H */

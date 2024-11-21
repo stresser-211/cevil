@@ -10,8 +10,8 @@ int main(int argc, char** argv) {
 	}
 	{
 		SDL_Event event;
-		window main_window("Cevil");
-		SDL_RenderPresent(main_window.get_renderer());
+		window::native main_window("Cevil");
+		main_window.show();
 		for (;;) {
 			while (SDL_PollEvent(&event)) {
 				switch (event.type) {

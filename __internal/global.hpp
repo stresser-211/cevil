@@ -1,7 +1,6 @@
 ﻿#ifndef GLOBAL_H
 #define GLOBAL_H
 #include "preprocessor.hpp"
-#include "types.hpp"
 constexpr struct {
 	cstr_t core = "CORE";
 	cstr_t warn = "WARNING";
