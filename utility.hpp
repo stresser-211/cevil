@@ -2,8 +2,7 @@
 #define UTILITY_H
 #include "__internal/preprocessor.hpp"
 #include "__internal/global.hpp"
-template <typename... T>
-void stacktrace(cstr_t _module, T... msg) {
+template <string_t... T> void stacktrace(std::string_view _module, T... msg) {
 	if (!global::logfile.is_open()) {
 		std::cerr << "---Couldn't open \"stacktrace.log\"---" << std::endl;
 		return;
@@ -14,16 +13,16 @@ void stacktrace(cstr_t _module, T... msg) {
 	((global::logfile << msg << " "), ...);
 	global::logfile << std::endl;
 }
-uint32_t get_CRC(cstr_t filename) {
+uint32_t get_CRC(std::string_view filename) {
 	uint32_t CRC = 0xFFFFFFFF;
-	unsigned char buffer[4096];
-	std::ifstream file(filename, std::ios::binary);
+	char buffer[4096];
+	std::ifstream file(filename.data(), std::ios::binary);
 	if (!file.is_open()) {
-		stacktrace(_module.error, "---Unable to open file:", filename, "---");
+		stacktrace(_module.error, "---Unable to open ", filename, "---");
 		return 0; //todo: exception
 	}
 	while (file) {
-		file.read(reinterpret_cast<str_t>(buffer), 4096);
+		file.read(buffer, 4096);
 		for (std::streamsize index = 0, bytes_read = file.gcount(); index < bytes_read; index++) {
 			uint8_t byte = buffer[index];
 			CRC = (CRC >> 8) ^ global::CRC_table[(CRC ^ byte) & 0xFF];

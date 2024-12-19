@@ -47,6 +47,7 @@
 #include <array>
 #include <vector>
 #include <span>
+#include <unordered_map>
 /* Multithreading */
 #include <thread>
 #include <future>
@@ -66,7 +67,7 @@
 #define DLLIMPORT __declspec(dllimport)
 #define RESTRICT __restrict
 #define FORCEINLINE __forceinline
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) || defined(__clang__)
 #define DLLEXPORT __attribute__((dllexport))
 #define DLLIMPORT __attribute__((dllimport))
 #define RESTRICT __restrict__
@@ -79,6 +80,5 @@
 #else
 #define API DLLEXPORT
 #endif /* EXPORT */
-#define str_t char*
-#define cstr_t const char*
+template <typename T> concept string_t = std::convertible_to<T, std::string_view>;
 #endif /* PREPROCESS_H */

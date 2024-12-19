@@ -2,12 +2,12 @@
 #define GLOBAL_H
 #include "preprocessor.hpp"
 constexpr struct {
-	cstr_t core = "CORE";
-	cstr_t warn = "WARNING";
-	cstr_t error = "ERROR";
-	cstr_t audio = "AUDIO";
-	cstr_t render = "RENDER";
-	cstr_t ios = "I/O";
+	const char* core = "CORE";
+	const char* warn = "WARNING";
+	const char* error = "ERROR";
+	const char* audio = "AUDIO";
+	const char* render = "RENDER";
+	const char* ios = "I/O";
 } _module;
 namespace global {
 	std::fstream logfile("../stacktrace.log", std::ios::in | std::ios::app);
@@ -27,15 +27,6 @@ namespace global {
 		}
 		return table;
 	}();
-	enum e_config {
-		fps,
-		vsync,
-		fullscreen,
-		width,
-		height,
-		shaders,
-		ldm
-	};
 	constinit std::array<std::pair<std::string, uint16_t>, 7> config = {
 		std::make_pair("FPS", 60),
 		std::make_pair("VSYNC", 0),
@@ -45,5 +36,20 @@ namespace global {
 		std::make_pair("SHADERS", 1),
 		std::make_pair("LDM", 0) /* low detail mode */
 	};
+	namespace enums {
+		enum config {
+			fps,
+			vsync,
+			fullscreen,
+			width,
+			height,
+			shaders,
+			ldm
+		};
+		enum audio_effects {
+			no_effect,
+			lowpass
+		};
+	}
 }
 #endif /* GLOBAL_H */

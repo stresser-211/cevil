@@ -1,4 +1,6 @@
 ﻿tmp/
+build/
+.vscode/
 CMakeFiles/
 CMakeLists.txt
 CMakeCache.txt

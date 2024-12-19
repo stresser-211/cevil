@@ -9,7 +9,7 @@ set(dll "-shared")
 
 set(CMAKE_CXX_FLAGS "-std=c++26 ${debug}")
 
-set(OUT_DIR "cd/..")
+set(OUT_DIR "./")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUT_DIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${OUT_DIR}/tmp")
 set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY "${OUT_DIR}/tmp")
