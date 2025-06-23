@@ -1,0 +1,9 @@
+﻿tmp/
+build/
+.vscode/
+.cache/
+CMakeFiles/
+*.ninja
+*.cmake
+.ninja_deps
+.ninja_log
