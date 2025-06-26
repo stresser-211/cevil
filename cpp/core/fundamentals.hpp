@@ -1,9 +1,9 @@
 ﻿#ifndef INTERNAL_OBJECTS_H
 #define INTERNAL_OBJECTS_H
-#include "preprocessor.hpp"
-#include "serialcocksucker.hpp"
-#include "global.hpp"
-#include "utility.hpp"
+#include "sdl.hpp"
+#include "../internal/preprocessor.hpp"
+#include "../internal/serialcocksucker.hpp"
+#include "../internal/utility.hpp"
 struct cubic_bezier {
 	float x1;
 	float y1;
@@ -11,6 +11,7 @@ struct cubic_bezier {
 	float y2;
 };
 namespace bezier {
+	constexpr cubic_bezier straight{0,0,1,1};
 	constexpr cubic_bezier ease_in{0.5,0,1,1};
 	constexpr cubic_bezier ease_out{0,0,0.5,1};
 	constexpr cubic_bezier ease_inout{0.5,0,0.5,1};
@@ -26,51 +27,71 @@ namespace bezier {
 	constexpr cubic_bezier elastic_backout{1,0.5,0.5,1.5};
 	constexpr cubic_bezier backout_smack{.9,1.27,0,1.44};
 }
-namespace objects {
+namespace basic {
+	extern auto make_window(std::string_view title, Uint16T width, Uint16T height);
+	extern auto make_window(std::string_view title);
 	class window final {
 		using E = gl::ecfg;
-		SDL_Window* win;
-		SDL_Renderer* rend;
-	public:
-		window(void) = delete;
-		explicit window(std::string_view title) {
-			win = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, E::WIDTH, E::HEIGHT, SDL_WINDOW_OPENGL | ((bool)gl::config[E::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
+		/* --- Construction --- */
+		FORCEINLINE window(const char* title, auto width, auto height) {
+			win = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | ((bool)gl::config[E::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
+			(win == nullptr) ? throw std::runtime_error(SDL_GetError()) : void(0);
 			rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | ((bool)gl::config[E::VSYNC].second ? SDL_RENDERER_PRESENTVSYNC : 0));
+			(rend == nullptr) ? throw std::runtime_error(SDL_GetError()) : void(0);
 			SDL_ShowWindow(win);
 		}
-		~window(void) {
-			SDL_DestroyRenderer(rend);
-			SDL_DestroyWindow(win);
+	public:
+		template <typename... T> window(T...) = delete;
+		~window(void) noexcept {
+			(rend != nullptr) ? SDL_DestroyRenderer(rend) : void(0);
+			(win != nullptr) ? SDL_DestroyWindow(win) : void(0);
 		}
+		friend auto make_window(std::string_view title, Uint16T width, Uint16T height) {
+			return window(title.data(), width, height);
+		}
+		friend auto make_window(std::string_view title) {
+			return window(title.data(), gl::config[E::WIDTH].second, gl::config[E::HEIGHT].second);
+		}
+		/* --- Methods --- */
 		void update(void) {
 			SDL_RenderPresent(rend);
 		}
-		SDL_Renderer* get_renderer(void) {
-			return rend;
+		void resize(Uint16T width, Uint16T height) {
+			SDL_SetWindowSize(win, width, height);
 		}
-		void msgbox(std::string_view message) {}
+		void msgbox_info(std::string_view message) {
+			window msgbox = make_window(message, 800u, 600u);
+			//...
+		}
+		void msgbox_action(std::string_view message) {
+			window msgbox = make_window(message, 800u, 600u);
+			//...
+		}
+	private:
+		SDL_Window* win;
+		SDL_Renderer* rend;
+		SDL_GLContext context = SDL_GL_CreateContext(win); //tmp
 	};
-	class object {
-		static uint_least32_t count;
+	class game_object {
+		static Uint32T count; /* 18446744073709551615 objects ought to be enough for anybody */ 
 	protected:
 		SDL_Vertex vertex;
 		SDL_Rect hitbox;
 		int z;
 	public:
-		object(void) {
+		game_object(void) {
 			count++;
 		}
-		~object(void) {
+		~game_object(void) {
 			count--;
 		}
-		virtual void move(int64_t x, int64_t y, uint16_t time = 0, const cubic_bezier& curve = {0,0,1,1}) = 0;
-		virtual void move(uint32_t step, gl::direction direction, uint16_t time = 0, const cubic_bezier& curve = {0,0,1,1}) = 0;
-		virtual void rotate(int16_t angle, uint16_t time = 0, const cubic_bezier& curve = {0,0,1,1}) = 0;
-		template <typename T> void resize(T, T, T, T) = delete;
-		virtual void resize(int16_t size, uint16_t time = 0, const cubic_bezier& curve = {0,0,1,1}) = 0;
-		virtual void resize(uint16_t size, uint16_t time = 0, const cubic_bezier& curve = {0,0,1,1}) = 0;
+		virtual void move(int64_t x, int64_t y, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void move(uint32_t step, gl::direction direction, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void rotate(int16_t angle, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void resize(Int16T size, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void resize(Uint16T size, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
 	};
-	class texture : private object {
+	class texture : private game_object {
 		bool failure;
 		SDL_Texture* txtr;
 		SDL_Rect area;
@@ -85,7 +106,7 @@ namespace objects {
 	public:
 		texture(void) = delete;
 		explicit texture(window& win, std::string_view path, int x = 0, int y = 0, int z = 0, uint8_t scale_percent = 100, uint16_t angle = 0)
-			: object()
+			: game_object()
 		{
 			float scale = scale_percent / 100;
 			txtr = IMG_LoadTexture(win.get_renderer(), path.data());
@@ -121,6 +142,6 @@ namespace objects {
 			}
 		}
 	};
-	uint_least32_t object::count = 0;
+	Uint32T game_object::count;
 }
 #endif /* INTERNAL_OBJECTS_H */

@@ -22,7 +22,7 @@ set (game "Game")
 set (modloader "Register")
 set (maploader "Terrain")
 
-add_library(${core} SHARED "cpp/core.cpp")
+add_library(${core} SHARED "cpp/core/self.cpp")
 add_library(${maploader} SHARED "cpp/maploader.cpp")
 add_executable(${modloader} "cpp/modloader.cpp")
 add_executable (${game} "cpp/main.cpp")
@@ -38,6 +38,8 @@ target_link_options(${game} PRIVATE
 )
 include_directories(
 	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/include"
+	"C:/SDK/C++/Lua/lua-5.4.2_win64/include"
+	"C:/SDK/C++/Lua"
 )
 target_link_libraries(${core} PUBLIC
 	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/lib/libSDL2.a"
@@ -52,5 +54,6 @@ target_link_libraries(${maploader} PRIVATE
 target_link_libraries(${game} PRIVATE
 	${core}
 	${maploader}
+	"C:/SDK/C++/Lua/lua-5.4.2_win64/liblua54.a"
 )
 # set_target_properties(${game} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

@@ -49,12 +49,6 @@
 /* Concurrency */
 #include <future>
 #include <semaphore>
-/* SDL */
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_net.h>
 #if defined(_MSC_VER)
 #define DLLEXPORT __declspec(dllexport)
 #define DLLIMPORT __declspec(dllimport)
@@ -66,7 +60,7 @@
 #define RESTRICT __restrict__
 #define FORCEINLINE inline __attribute__((always_inline))
 #else
-#error ---Unsupported compiler i suppose---
+#error --- Unsupported compiler i suppose ---
 #endif /* compiler */
 #ifndef EXPORT
 #define API DLLIMPORT

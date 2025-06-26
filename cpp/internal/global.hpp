@@ -1,5 +1,5 @@
-﻿#ifndef GLOBAL_H
-#define GLOBAL_H
+﻿#ifndef INTERNAL_GLOBAL_H
+#define INTERNAL_GLOBAL_H
 #include "preprocessor.hpp"
 namespace gl {
 	constinit bool nolog{false};
@@ -7,8 +7,10 @@ namespace gl {
 		const char* core = "CORE";
 		const char* warn = "WARNING";
 		const char* error = "ERROR";
-		const char* crit = "CRITICAL ERROR";
+		const char* fail = "CRITICAL FAILURE";
+		const char* render = "RENDER";
 		const char* asio = "AUDIO";
+		const char* mem = "MEMORY";
 	} mod;
 	constexpr std::array<uint32_t, 256> CRC = [](void) {
 		uint32_t _CRC;
@@ -42,4 +44,4 @@ namespace gl {
 		UP, DOWN, LEFT, RIGHT, FRONT, BACK
 	};
 }
-#endif /* GLOBAL_H */
+#endif /* INTERNAL_GLOBAL_H */
