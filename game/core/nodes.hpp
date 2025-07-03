@@ -1,8 +1,7 @@
 ﻿#ifndef CORE_NODES_H
 #define CORE_NODES_H
+#include "../internal/include.hpp"
 #include "sdl.hpp"
-#include "../internal/preprocessor.hpp"
-#include "../internal/serialcocksucker.hpp"
 #include "fundamentals.hpp"
 namespace node {
 	class cell {

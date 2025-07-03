@@ -8,29 +8,31 @@ ___
 - `StresseR` — lazy dev
 ___
 ## TODO:
-- primitive wrappers: increment/decrement, exceptions, overflow/underflow handle
-- exception handler
+- primitive wrappers: interpolation with each other, 'out of range' check revision
+- runtime exception handler
 - configuration file parser revision
 - cubic-bezier interpreter
 - window class rework
-- implementation of objects: object base, texture, object, trigger, audio chunk, complex objects (counter, sequence trigger, audio stream)
-- camera (kill me)
-- render layers
-- audio channels
-- events
-- keyboard input
-- audio effects support (probably)
-- concurrency
 - OpenGL render
 - GLSL shaders
+- concurrency
+- basic objects: interface (base), texture, object, trigger, audio chunk
+- nodes: cell, counter, sequence (trigger), audio stream, camera (kill me), particle emitter, shader, gradient (shader, cell)
+- render layers
+- blending: normal, multiply, screen, linear light, invert
+- audio channels
+- audio effects: pitch shift, lowpass
+- events: keyboard input, mouse input, exit
 - scenario & map editor (gui)
-- scripting language for the editor (i **suggest** Lua)
-- scenario archiver
+- scripting language for the editor (Lua)
+- script: enforce UTF-8
+- scenario archiver (compression)
+- save data serialization
 - main campaign
 - achievements
-- save data serialization
-- TCP client/server connection
-- various encodings support and conversion to unicode (UTF-8)
-- custom emojis
+- client/server: TCP connection, authorization, player db (MariaDB)
+- text processing: everything to unicode (UTF-8), custom emoticons
 - multiplayer (revive me and kill again)
-- anticheat
+- anticheat?
+___
+# UNIT TESTS PLEASE

@@ -9,6 +9,35 @@
 #else
 #pragma message("--- Building the project ---")
 #endif /* __cplusplus */
+#if defined(_MSC_VER)
+#define dllexport __declspec(dllexport)
+#define dllimport __declspec(dllimport)
+#define forceinline __forceinline
+#elif defined(__GNUC__) || defined(__clang__)
+#define dllexport [[gnu::dllexport]]
+#define dllimport [[gnu::dllimport]]
+#define forceinline [[gnu::always_inline]]
+#else
+#error --- Unsupported compiler i suppose ---
+#endif /* compiler */
+#ifndef EXPORT
+#define API dllimport
+#else
+#define API dllexport
+#endif /* EXPORT */
+#define nodiscard(reason) [[nodiscard(reason)]]
+#define restrict __restrict
+#define __CONCAT_IMPL(x, y) x##y
+#define __CONCAT(x, y) __CONCAT_IMPL(x, y)
+#define cleanup(function) auto __CONCAT(__cleaner_, __COUNTER__) = __MakeScopeGuard(function)
+template <typename F> struct __ScopeGuard {
+	F func;
+	__ScopeGuard(F f) : func(f) {}
+	~__ScopeGuard() { func(); }
+};
+template <typename F> __ScopeGuard<F> __MakeScopeGuard(F f) {
+	return __ScopeGuard<F>(f);
+}
 /* I/O */
 #include <cstdio>
 #include <filesystem>
@@ -49,22 +78,4 @@
 /* Concurrency */
 #include <future>
 #include <semaphore>
-#if defined(_MSC_VER)
-#define DLLEXPORT __declspec(dllexport)
-#define DLLIMPORT __declspec(dllimport)
-#define RESTRICT __restrict
-#define FORCEINLINE __forceinline
-#elif defined(__GNUC__) || defined(__clang__)
-#define DLLEXPORT __attribute__((dllexport))
-#define DLLIMPORT __attribute__((dllimport))
-#define RESTRICT __restrict__
-#define FORCEINLINE inline __attribute__((always_inline))
-#else
-#error --- Unsupported compiler i suppose ---
-#endif /* compiler */
-#ifndef EXPORT
-#define API DLLIMPORT
-#else
-#define API DLLEXPORT
-#endif /* EXPORT */
 #endif /* PREPROCESS_H */

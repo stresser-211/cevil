@@ -21,16 +21,21 @@ set (core "Core")
 set (game "Game")
 set (modloader "Register")
 set (maploader "Terrain")
+set (client "Client")
 
-add_library(${core} SHARED "cpp/core/self.cpp")
-add_library(${maploader} SHARED "cpp/maploader.cpp")
-add_executable(${modloader} "cpp/modloader.cpp")
-add_executable (${game} "cpp/main.cpp")
+add_library(${core} SHARED "game/core/self.cpp")
+add_library(${maploader} SHARED "game/maploader/self.cpp")
+add_library(${client} SHARED "game/client/self.cpp")
+add_executable(${modloader} "game/modloader/self.cpp")
+add_executable (${game} "game/main.cpp")
 
 target_link_options(${core} PRIVATE
 	${dll}
 )
 target_link_options(${maploader} PRIVATE
+	${dll}
+)
+target_link_options(${client} PRIVATE
 	${dll}
 )
 target_link_options(${game} PRIVATE
@@ -46,14 +51,19 @@ target_link_libraries(${core} PUBLIC
 	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/lib/libSDL2_image.a"
 	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/lib/libSDL2_mixer.a"
 	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/lib/libSDL2_ttf.a"
-	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/lib/libSDL2_net.a"
+)
+target_link_libraries(${modloader} PRIVATE
+	"C:/SDK/C++/Lua/lua-5.4.2_win64/liblua54.a"
 )
 target_link_libraries(${maploader} PRIVATE
 	${core}
 )
+target_link_libraries(${client} PRIVATE
+	"C:/SDK/C++/SDL2/x86_64-w64-mingw32/lib/libSDL2_net.a"
+)
 target_link_libraries(${game} PRIVATE
 	${core}
+	${client}
 	${maploader}
-	"C:/SDK/C++/Lua/lua-5.4.2_win64/liblua54.a"
 )
 # set_target_properties(${game} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

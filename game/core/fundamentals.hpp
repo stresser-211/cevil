@@ -1,39 +1,37 @@
 ﻿#ifndef INTERNAL_OBJECTS_H
 #define INTERNAL_OBJECTS_H
+#include "../internal/include.hpp"
 #include "sdl.hpp"
-#include "../internal/preprocessor.hpp"
-#include "../internal/serialcocksucker.hpp"
-#include "../internal/utility.hpp"
 struct cubic_bezier {
 	float x1;
 	float y1;
 	float x2;
 	float y2;
 };
-namespace bezier {
-	constexpr cubic_bezier straight{0,0,1,1};
-	constexpr cubic_bezier ease_in{0.5,0,1,1};
-	constexpr cubic_bezier ease_out{0,0,0.5,1};
-	constexpr cubic_bezier ease_inout{0.5,0,0.5,1};
-	constexpr cubic_bezier elastic_in{1,0.5,1,1};
-	constexpr cubic_bezier elastic_out{0,0,0,.5};
-	constexpr cubic_bezier elastic_inout{1,0.5,0,0.5};
-	constexpr cubic_bezier wave{0.5,1.5,0.5,-0.5};
-	constexpr cubic_bezier glitch{1,1.25,0,-0.25};
-	constexpr cubic_bezier exponential_in{1,0,1,1};
-	constexpr cubic_bezier exponential_out{0,0,0,1};
-	constexpr cubic_bezier exponential_inout{1,0,0,1};
-	constexpr cubic_bezier backout{0.72,1.44,0.4,1.28};
-	constexpr cubic_bezier elastic_backout{1,0.5,0.5,1.5};
-	constexpr cubic_bezier backout_smack{.9,1.27,0,1.44};
-}
+constexpr struct {
+	cubic_bezier straight{0,0,1,1};
+	cubic_bezier ease_in{0.5,0,1,1};
+	cubic_bezier ease_out{0,0,0.5,1};
+	cubic_bezier ease_inout{0.5,0,0.5,1};
+	cubic_bezier elastic_in{1,0.5,1,1};
+	cubic_bezier elastic_out{0,0,0,.5};
+	cubic_bezier elastic_inout{1,0.5,0,0.5};
+	cubic_bezier wave{0.5,1.5,0.5,-0.5};
+	cubic_bezier glitch{1,1.25,0,-0.25};
+	cubic_bezier exponential_in{1,0,1,1};
+	cubic_bezier exponential_out{0,0,0,1};
+	cubic_bezier exponential_inout{1,0,0,1};
+	cubic_bezier backout{0.72,1.44,0.4,1.28};
+	cubic_bezier elastic_backout{1,0.5,0.5,1.5};
+	cubic_bezier backout_smack{.9,1.27,0,1.44};
+} bezier;
 namespace basic {
 	extern auto make_window(std::string_view title, Uint16T width, Uint16T height);
 	extern auto make_window(std::string_view title);
 	class window final {
 		using E = gl::ecfg;
 		/* --- Construction --- */
-		FORCEINLINE window(const char* title, auto width, auto height) {
+		forceinline window(const char* title, auto width, auto height) {
 			win = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | ((bool)gl::config[E::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
 			(win == nullptr) ? throw std::runtime_error(SDL_GetError()) : void(0);
 			rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | ((bool)gl::config[E::VSYNC].second ? SDL_RENDERER_PRESENTVSYNC : 0));

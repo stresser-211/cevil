@@ -7,7 +7,7 @@ namespace gl {
 		const char* core = "CORE";
 		const char* warn = "WARNING";
 		const char* error = "ERROR";
-		const char* fail = "CRITICAL FAILURE";
+		const char* fail = "FAILURE";
 		const char* render = "RENDER";
 		const char* asio = "AUDIO";
 		const char* mem = "MEMORY";

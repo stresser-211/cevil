@@ -1,9 +1,10 @@
-﻿tmp/
+﻿CMakeFiles/
 build/
+tmp/
 .vscode/
 .cache/
-CMakeFiles/
-*.ninja
-*.cmake
 .ninja_deps
 .ninja_log
+*.ninja
+*.cmake
+*.js

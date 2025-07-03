@@ -3,5 +3,7 @@
 #include "sdl.hpp"
 #include "fundamentals.hpp"
 #include "nodes.hpp"
-extern inline void get_config(void);
+extern "C" {
+	API int init_engine(void);
+}
 #endif /* CORE_H */
