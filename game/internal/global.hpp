@@ -43,5 +43,8 @@ namespace gl {
 	enum direction {
 		UP, DOWN, LEFT, RIGHT, FRONT, BACK
 	};
+	enum blend {
+		NORMAL, MULTIPLY, SCREEN, LINLIGHT, INVERT
+	};
 }
 #endif /* INTERNAL_GLOBAL_H */

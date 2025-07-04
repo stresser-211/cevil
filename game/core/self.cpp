@@ -13,7 +13,7 @@ extern "C" {
 			if (buffer[0] == '#') {
 				continue;
 			}
-			trim(buffer);
+			strtrim(buffer);
 			char* token = std::strchr(buffer, '=');
 			const char* key = std::strstr(buffer, token);
 			const char* value = std::strstr(buffer, token+1);

@@ -265,13 +265,17 @@ template <integer_t INT_N> struct BaseInt {
 	}
 private:
 	INT_N self;
-	inline constexpr bool outtarange(numeral_t auto x) noexcept {
-		auto maxval = [](void){
-			INT_N x = 0;
-			auto p = std::exp2(sizeof(x) * 8);
-			return ((decltype(x))(x - 1) == p - 1) ? p - 1 : p/2 - 1;
-		};
+	forceinline constexpr auto maxval(void) noexcept {
+		INT_N x = 0;
+		auto p = std::exp2(sizeof(x) * 8);
+		return ((decltype(x))(x - 1) == p - 1) ? p - 1 : p/2 - 1;
+	}
+	inline constexpr bool outtarange(unsigned_t auto x) noexcept {
+		return (x > maxval()) ? true : false;
+	}
+	inline constexpr bool outtarange(signed_t auto x) noexcept {
 		return (std::abs(x) > maxval()) ? true : false;
+		/* capacity reduced by one from -x axis, i know that */
 	}
 };
 struct Int8T final: public BaseInt<int8_t> { __Uses(BaseInt); };

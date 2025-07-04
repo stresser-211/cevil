@@ -35,7 +35,7 @@ template <typename F> struct __ScopeGuard {
 	__ScopeGuard(F f) : func(f) {}
 	~__ScopeGuard() { func(); }
 };
-template <typename F> __ScopeGuard<F> __MakeScopeGuard(F f) {
+template <typename F> inline __ScopeGuard<F> __MakeScopeGuard(F f) {
 	return __ScopeGuard<F>(f);
 }
 /* I/O */
