@@ -33,16 +33,16 @@ namespace basic {
 		/* --- Construction --- */
 		forceinline window(const char* title, auto width, auto height, auto flags) {
 			win = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | flags);
-			(win == nullptr) ? throw std::runtime_error(SDL_GetError()) : void(0);
+			if (win == nullptr) throw std::runtime_error(SDL_GetError());
 			rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | (static_cast<bool>(gl::config[E::VSYNC].second) ? SDL_RENDERER_PRESENTVSYNC : 0));
-			(rend == nullptr) ? throw std::runtime_error(SDL_GetError()) : void(0);
+			if (rend == nullptr) throw std::runtime_error(SDL_GetError());
 			SDL_ShowWindow(win);
 		}
 	public:
 		template <typename... T> window(T...) = delete;
 		~window(void) noexcept {
-			(rend != nullptr) ? SDL_DestroyRenderer(rend) : void(0);
-			(win != nullptr) ? SDL_DestroyWindow(win) : void(0);
+			if (rend != nullptr) SDL_DestroyRenderer(rend);
+			if (win != nullptr) SDL_DestroyWindow(win);
 		}
 		friend auto make_window(std::string_view title, Uint16T width, Uint16T height, SDL_WindowFlags flags) {
 			return window(title.data(), width, height, flags);
