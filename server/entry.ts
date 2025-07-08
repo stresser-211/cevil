@@ -1,5 +1,7 @@
-﻿import * as server from "./module/server.js"
+﻿import * as __xtypes from "./include/type_traits.js"
+Object.assign(globalThis, __xtypes);
+
 const main = (args: void) => {
-	server.listen();
+	console.log("Nothing to see here... yet.");
 }
-main()
+main();

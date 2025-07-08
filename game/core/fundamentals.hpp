@@ -2,6 +2,14 @@
 #define INTERNAL_OBJECTS_H
 #include "../internal/include.hpp"
 #include "sdl.hpp"
+static constinit std::array<std::ranges::iota_view<uint64_t, uint64_t>, 7> layer = {
+	std::ranges::views::iota(1ull, ULONG_LONG_MAX / 6),
+	std::ranges::views::iota(ULONG_LONG_MAX / 6 + 1, ULONG_LONG_MAX / 6 * 2),
+	std::ranges::views::iota(ULONG_LONG_MAX / 6 * 2 + 1, ULONG_LONG_MAX / 6 * 3),
+	std::ranges::views::iota(ULONG_LONG_MAX / 6 * 3 + 1, ULONG_LONG_MAX / 6 * 4),
+	std::ranges::views::iota(ULONG_LONG_MAX / 6 * 4 + 1, ULONG_LONG_MAX / 6 * 5),
+	std::ranges::views::iota(ULONG_LONG_MAX / 6 * 5, ULONG_LONG_MAX)
+};
 struct cubic_bezier {
 	float x1;
 	float y1;
@@ -81,39 +89,51 @@ namespace basic {
 		SDL_Renderer* rend;
 		SDL_GLContext context = SDL_GL_CreateContext(win); //tmp
 	};
+
+
+
+
+
+
+
+
 	class interface {
 		static Uint64T count; /* 18446744073709551615 objects ought to be enough for anybody */ 
+		gl::elayer layer;
 	protected:
 		[[maybe_unused]] SDL_Vertex vertex;
 		[[maybe_unused]] SDL_Rect hitbox;
-	public:
+		Int64T x, y;
+		Uint64T z;
 		interface(void) {
 			count++;
 		}
-		~interface(void) {
+		virtual ~interface(void) {
 			count--;
 		}
-		virtual void move(int64_t x, int64_t y, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
-		virtual void move(uint32_t step, gl::direction direction, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
-		virtual void rotate(int16_t angle, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
-		virtual void resize(Int16T size, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
-		virtual void resize(Uint16T size, uint16_t time = 0, const cubic_bezier& curve = bezier::straight) = 0;
+	public:
+		/* --- No default arguments in the implementation please. --- */
+		virtual void move(Int64T x, Int64T y, Uint16T time = 0u, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void move(Uint32T step, gl::direction direction, Uint16T time = 0u, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void rotate(Int16T angle, Uint16T time = 0u, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void resize(Int16T size, Uint16T time = 0u, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void resize(Uint16T size, Uint16T time = 0u, const cubic_bezier& curve = bezier::straight) = 0;
+		virtual void destroy(void) = 0;
 	};
 	class texture : private interface {
 		SDL_Texture* txtr;
 		SDL_Rect area;
-		bool failed;
 		gl::blend blend;
 		struct {
-			uint16_t hue;
-			uint8_t saturation;
-			uint8_t visibility;
+			Uint16T hue;
+			Uint8T saturation;
+			Uint8T visibility;
 		} colour;
-		uint8_t scale;
-		uint16_t angle;
+		Uint8T scale;
+		Uint16T angle;
 	public:
-		texture(void) = delete;
-		explicit texture(window& win, std::string_view path, int x = 0, int y = 0, uint8_t scale_percent = 100, uint16_t angle = 0) : interface() {
+		template <typename... T> texture(T...) = delete;
+		explicit texture(window& win, std::string_view path, Int32T x = 0, Int32T y = 0, Uint8T scale_percent = 100u, Uint16T angle = 0u) : interface() {
 			float scale = scale_percent / 100;
 			txtr = IMG_LoadTexture(nullptr, path.data());
 			if (SDL_QueryTexture(txtr, NULL, NULL, &area.w, &area.h) < 0) {
@@ -123,27 +143,28 @@ namespace basic {
 			area.y = y;
 			area.w *= scale;
 			area.h *= scale;
+			hitbox = area;
 		}
-		~texture(void) {
+		virtual ~texture(void) {
 			SDL_DestroyTexture(txtr);
 		}
-		void stretch(int h = 0, int v = 0) {
+		virtual void stretch(int h = 0, int v = 0) final {
 			return;
 		}
-		void crop(unsigned left = 0, unsigned right = 0, unsigned up = 0, unsigned down = 0) {
+		virtual void crop(unsigned left = 0, unsigned right = 0, unsigned up = 0, unsigned down = 0) final {
 			return;
 		}
-		void colmod(uint16_t hue = 0, uint8_t saturation = 0, uint8_t visibility = 0) {
+		virtual void colmod(uint16_t hue = 0, uint8_t saturation = 0, uint8_t visibility = 0) final {
 			return;
 		}
 	};
 	class audio_chunk {
 		Mix_Chunk* chunk;
 	public:
-		audio_chunk(void) = delete;
+		template <typename... T> audio_chunk(T...) = delete;
 		explicit audio_chunk(std::string_view path) {
 			if (!(chunk = Mix_LoadWAV(path.data()))) {
-				stacktrace(gl::mod.error, std::format("---Couldn't load audio file: {}---", SDL_GetError()).c_str());
+				stacktrace(gl::mod.error, SDL_GetError());
 			}
 		}
 	};

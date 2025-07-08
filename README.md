@@ -1,5 +1,5 @@
 ﻿# --- FUCK THIS. I'M GOING TO BRAZIL. ---
-This monstrosity of a code is presumably some sort of a TBS game being made from scratch.\
+This monstrosity of a code is presumably going to be some sort of a TBS game, being made from scratch for some enigmatic reason.\
 Status: *not compiled*
 ___
 ## Contributors:
@@ -8,12 +8,11 @@ ___
 - `*You could be here*` — but you aren't.
 ___
 ## TODO:
+- OpenGL render
 - runtime exception handler
 - configuration file parser revision
 - cubic-bezier interpreter
 - window class rework
-- OpenGL render
-- GLSL shaders
 - concurrency
 - basic objects:
 	- window
@@ -29,7 +28,7 @@ ___
 	- audio stream : audio chunk
 	- camera (kill me) : object
 	- particle emitter : trigger
-	- shader : trigger
+	- shader (GLSL) : trigger
 	- gradient : shader, cell
 - render layers
 - blending: normal, multiply, screen, linear light, invert

@@ -46,5 +46,8 @@ namespace gl {
 	enum blend {
 		NORMAL, MULTIPLY, SCREEN, LINLIGHT, INVERT
 	};
+	enum elayer {
+		HIDDEN_L, MAP_L, OBJECT_L, INFO_L, POPUP_L, INTERFACE_L
+	};
 }
 #endif /* INTERNAL_GLOBAL_H */
