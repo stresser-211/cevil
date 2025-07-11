@@ -13,6 +13,6 @@ set options=^
 	--noEmitOnError^
 	--newLine crlf^
 	--noErrorTruncation
-call tsc %options% --outDir ./include ./module/xtypes.ts
+call tsc %options% --outDir ./include ./module/type_traits.ts
 call tsc %options% entry.ts
 call ./autorun

@@ -14,6 +14,6 @@ options=(
 	--newLine crlf
 	--noErrorTruncation
 )
-tsc "${options[@]}" --outDir ./include ./module/xtypes.ts
+tsc "${options[@]}" --outDir ./include ./module/type_traits.ts
 tsc "${options[@]}" entry.ts
 ./autorun
