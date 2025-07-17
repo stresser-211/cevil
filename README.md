@@ -1,6 +1,6 @@
-﻿# --- FUCK THIS. I'M GOING TO BRAZIL. ---
+﻿# --- swang swung ---
 This monstrosity of a code is presumably going to be some sort of a TBS game, being made from scratch for some enigmatic reason.\
-Status: *not compiled*
+Status: *compiles. not sure about the rest.*
 ___
 ## Contributors:
 - `rhisth` — original repository owner.
@@ -8,8 +8,8 @@ ___
 - `*You could be here*` — but you aren't.
 ___
 ## TODO:
-- OpenGL render
-- runtime exception handler
+- enhanced logs
+- error codes
 - configuration file parser revision
 - cubic-bezier interpreter
 - window class rework

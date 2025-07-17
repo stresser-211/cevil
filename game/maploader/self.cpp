@@ -1,7 +1,7 @@
 ﻿#define EXPORT
 #include "self.hpp"
 extern "C" {
-	API int init_maploader(void) {
+	int API init_maploader(void) {
 		return 0;
 	}
 }

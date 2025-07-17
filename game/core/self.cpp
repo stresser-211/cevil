@@ -1,5 +1,30 @@
 ﻿#define EXPORT
 #include "self.hpp"
+uint32_t get_CRC(std::string_view filename) {
+	_iobuf* file = std::fopen(filename.data(), "b");
+	if (file == NULL) {
+		std::string errstr = std::format("Unable to open \"{}\".", filename);
+		stacktrace(gl::mod.fail, errstr);
+		throw std::runtime_error(errstr);
+	}
+	uint32_t CRC = 0xFFFFFFFF;
+	char buffer[4096];
+	while (!feof(file)) {
+		size_t bytes_read = std::fread(buffer, 1, sizeof(buffer), file);
+		for (size_t index = 0; index < bytes_read; index++) { 
+			uint8_t byte = buffer[index];
+			CRC = (CRC >> 8) ^ gl::CRC[(CRC ^ byte) & 0xFF];
+		}
+	}
+	return CRC ^ 0xFFFFFFFF;
+}
+int init_SDL(void) noexcept {
+	SDL_SetMainReady();
+	if (int code = SDL_Init(SDL_INIT_EVERYTHING) < 0) return code;
+	if (int code = TTF_Init() < 0) return 1;
+	Mix_Init(MIX_INIT_OGG);
+	return 0;
+}
 extern "C" {
 	void get_config(void) {
 		_iobuf* config = fopen("Config.txt", "r");
@@ -27,29 +52,32 @@ extern "C" {
 			}
 		}
 	}
-	uint32_t get_CRC(std::string_view filename) {
-		_iobuf* file = std::fopen(filename.data(), "b");
-		if (file == NULL) {
-			std::string errstr = std::format("Unable to open \"{}\".", filename);
-			stacktrace(gl::mod.fail, errstr);
-			throw std::runtime_error(errstr);
+	int API init_engine(void) {
+		switch (int code = init_SDL()) {
+		case 0: break;
+		case 1: stacktrace(gl::mod.error, std::format("Couldn't initialize SDL_TTF"));
+		default:
+			stacktrace(gl::mod.error, std::format("Couldn't initialize SDL: {}", SDL_GetError()));
+			return code;
 		}
-		uint32_t CRC = 0xFFFFFFFF;
-		char buffer[4096];
-		while (!feof(file)) {
-			size_t bytes_read = std::fread(buffer, 1, sizeof(buffer), file);
-			for (size_t index = 0; index < bytes_read; index++) { 
-				uint8_t byte = buffer[index];
-				CRC = (CRC >> 8) ^ gl::CRC[(CRC ^ byte) & 0xFF];
-			}
-		}
-		return CRC ^ 0xFFFFFFFF;
-	}
-	API int init_engine(void) {
-		if (Mix_OpenAudio(44100, AUDIO_S16, 2, 2048) < 0) {
-			stacktrace(gl::mod.error, "Couldn't open audio device.");
-			return 1;
+		int glmj, glmn;
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &glmj);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &glmn);
+		if (glmj > 4) if (glmn > 0) return 2;
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 8 );
+		SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
+		if (int code = Mix_OpenAudio(44100, AUDIO_S16, 2, 2048); code < 0) {
+			stacktrace(gl::mod.error, std::format("Couldn't open audio device: {}", Mix_GetError()));
+			return code;
 		}
 		return 0;
+	}
+	void API shutdown_engine(void) noexcept {
+		TTF_Quit();
+		Mix_Quit();
+		SDL_Quit();
 	}
 }

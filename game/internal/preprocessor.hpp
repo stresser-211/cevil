@@ -5,25 +5,23 @@
 #if !defined(__cplusplus)
 #error --- C++ is required ---
 #elif __cplusplus < 202400L
-#error --- I'm using GCC 15, deal with it ---
-#else
-#pragma message("--- Building the project ---")
+#error --- I am using GCC 15, deal with it ---
 #endif /* __cplusplus */
 #if defined(_MSC_VER)
-#define dllexport __declspec(dllexport)
-#define dllimport __declspec(dllimport)
+#define libexport __declspec(dllexport)
+#define libimport __declspec(dllimport)
 #define forceinline __forceinline
 #elif defined(__GNUC__) || defined(__clang__)
-#define dllexport [[gnu::dllexport]]
-#define dllimport [[gnu::dllimport]]
-#define forceinline [[gnu::always_inline]]
+#define libexport __attribute__((dllexport))
+#define libimport __attribute__((dllimport))
+#define forceinline __attribute__((always_inline)) inline
 #else
 #error --- Unsupported compiler i suppose ---
 #endif /* compiler */
 #ifndef EXPORT
-#define API dllimport
+#define API libimport
 #else
-#define API dllexport
+#define API libexport
 #endif /* EXPORT */
 #define nodiscard(reason) [[nodiscard(reason)]]
 #define restrict __restrict
@@ -67,13 +65,13 @@ template <typename F> inline __ScopeGuard<F> __MakeScopeGuard(F f) {
 /* Diagnostics */
 #include <system_error>
 #include <stdexcept>
+#include <source_location>
 /* Time */
 #include <chrono>
 /* Containers */
 #include <initializer_list>
 #include <array>
 #include <valarray>
-#include <vector>
 #include <span>
 /* Concurrency */
 #include <future>

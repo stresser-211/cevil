@@ -1,9 +1,7 @@
-﻿#ifndef CORE_H
-#define CORE_H
+﻿#pragma once
+#include "../internal/include.hpp"
 #include "sdl.hpp"
-#include "fundamentals.hpp"
-#include "nodes.hpp"
 extern "C" {
-	API int init_engine(void);
+	int API init_engine(void);
+	void API shutdown_engine(void) noexcept;
 }
-#endif /* CORE_H */

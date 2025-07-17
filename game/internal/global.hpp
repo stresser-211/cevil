@@ -1,8 +1,7 @@
-﻿#ifndef INTERNAL_GLOBAL_H
-#define INTERNAL_GLOBAL_H
+﻿#pragma once
 #include "preprocessor.hpp"
 namespace gl {
-	constinit bool nolog{false};
+	inline constinit bool nolog{false};
 	constexpr struct {
 		const char* core = "CORE";
 		const char* warn = "WARNING";
@@ -28,7 +27,7 @@ namespace gl {
 		}
 		return table;
 	}();
-	constinit std::array<std::pair<const char*, uint16_t>, 7> config = {
+	inline constinit std::array<std::pair<const char*, uint16_t>, 7> config = {
 		std::make_pair("FPS", 60),
 		std::make_pair("VSYNC", 0),
 		std::make_pair("FULLSCREEN", 1),
@@ -47,7 +46,6 @@ namespace gl {
 		NORMAL, MULTIPLY, SCREEN, LINLIGHT, INVERT
 	};
 	enum elayer {
-		HIDDEN_L, MAP_L, OBJECT_L, INFO_L, POPUP_L, INTERFACE_L
+		HIDDEN_LAYER, MAP_LAYER, OBJECT_LAYER, INFO_LAYER, POPUP_LAYER, INTERFACE_LAYER
 	};
 }
-#endif /* INTERNAL_GLOBAL_H */

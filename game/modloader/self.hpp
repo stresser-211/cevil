@@ -1,7 +1,5 @@
-﻿#ifndef MODLOADER_H
-#define MODLOADER_H
+﻿#pragma once
 #include "../internal/include.hpp"
 extern "C" {
-	API int init_modloader(void);
+	int API init_modloader(void);
 }
-#endif /* MODLOADER_H */

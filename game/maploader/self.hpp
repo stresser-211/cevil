@@ -1,8 +1,6 @@
-﻿#ifndef TERRAIN_H
-#define TERRAIN_H
+﻿#pragma once
 #include "../internal/include.hpp"
-#include <sol2/sol.hpp>
+#include <lua.hpp>
 extern "C" {
-	API int init_maploader(void);
+	int API init_maploader(void);
 }
-#endif /* TERRAIN_H */
