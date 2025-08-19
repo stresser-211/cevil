@@ -13,6 +13,8 @@ set options=^
 	--noEmitOnError^
 	--newLine crlf^
 	--noErrorTruncation
-call tsc %options% --outDir ./include ./module/type_traits.ts
-call tsc %options% entry.ts
-call ./autorun
+
+:: --- Set your own path --- ::
+set path=../../server-nodejs-v20.17.0/server
+
+call tsc %options% --outDir %path% ./encrypt.ts ./server.ts ./entry.ts

@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "../internal/include.hpp"
-#include <lua.hpp>
+#include "../internal/include"
 extern "C" {
 	int API init_maploader(void);
 }

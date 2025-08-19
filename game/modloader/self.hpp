@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../internal/include.hpp"
+#include "../internal/include"
 extern "C" {
 	int API init_modloader(void);
 }

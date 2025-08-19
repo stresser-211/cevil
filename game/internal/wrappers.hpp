@@ -1,6 +1,7 @@
 #pragma once
 #include "preprocessor.hpp"
 #include "global.hpp"
+#include "utility.hpp"
 #define  __Uses(T) \
 	using T::operator=; \
 	using T::operator+; \
@@ -14,12 +15,6 @@
 	using T::operator!=; \
 	using T::operator<=>; \
 	using T::T;
-template <typename T, typename U> concept related_to = std::is_base_of<T, U>::value or std::same_as<T, U>;
-template <typename T> concept numeral_t = std::is_arithmetic<T>::value && !std::same_as<T, bool>;
-template <typename T> concept integer_t = std::is_integral<T>::value && !std::same_as<T, bool>;
-template <typename T> concept fraction_t = std::is_floating_point<T>::value;
-template <typename T> concept signed_t = integer_t<T> && std::is_signed<T>::value;
-template <typename T> concept unsigned_t = integer_t<T> && std::is_unsigned<T>::value;
 template <integer_t INT_N> struct BaseInt {
 	/* --- Construction --- */
 	template <typename... T> BaseInt(T...) = delete;
@@ -38,23 +33,23 @@ template <integer_t INT_N> struct BaseInt {
 	}
 	template <typename... T> auto operator=(T...) = delete;
 	template <class T> inline constexpr void operator=(T x) requires std::is_class<T>::value && related_to<BaseInt<decltype(T::typeof())>, T> {
-		if (outtarange(static_cast<decltype(T::typeof())>(x))) throw std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(static_cast<decltype(T::typeof())>(x))) throw ERROR::OVERFLOW;
 		self = static_cast<INT_N>(x);
 	}
 	inline constexpr void operator=(signed_t auto x) requires signed_t<INT_N> {
-		if (outtarange(x)) throw std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(x)) throw ERROR::OVERFLOW;
 		self = static_cast<INT_N>(x);
 	}
 	inline constexpr void operator=(unsigned_t auto x) requires unsigned_t<INT_N> {
-		if (outtarange(x)) throw std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(x)) throw ERROR::OVERFLOW;
 		self = static_cast<INT_N>(x);
 	}
 	inline constexpr void operator=(fraction_t auto x) requires signed_t<INT_N> {
-		if (outtarange(x)) throw std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(x)) throw ERROR::OVERFLOW;
 		self = static_cast<INT_N>(std::round(x));
 	}
 	inline constexpr void operator=(fraction_t auto x) requires unsigned_t<INT_N> {
-		if (outtarange(x)) throw std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(x)) throw ERROR::OVERFLOW;
 		self = static_cast<INT_N>(std::abs(std::round(x)));
 	}
 	/* --- Unary --- */
@@ -120,23 +115,23 @@ template <integer_t INT_N> struct BaseInt {
 	/* --- Division --- */
 	template <typename... T> auto operator/(T...) = delete;
 	template <class T> inline constexpr friend INT_N operator/(integer_t auto i, T x) requires std::is_class<T>::value && related_to<BaseInt<decltype(T::typeof())>, T> {
-		if (static_cast<decltype(T::typeof())>(x) == 0) throw std::domain_error("Division by zero is undefined.");
+		if (static_cast<decltype(T::typeof())>(x) == 0) throw ERROR::DIVISION_BY_ZERO;
 		return static_cast<INT_N>(i / static_cast<decltype(T::typeof())>(x));
 	}
 	template <class T> inline constexpr friend INT_N operator/(fraction_t auto i, T x) requires std::is_class<T>::value && related_to<BaseInt<decltype(T::typeof())>, T> {
-		if (static_cast<decltype(T::typeof())>(x) == 0) throw std::domain_error("Division by zero is undefined.");
+		if (static_cast<decltype(T::typeof())>(x) == 0) throw ERROR::DIVISION_BY_ZERO;
 		return static_cast<INT_N>(std::round(i / static_cast<decltype(T::typeof())>(x)));
 	}
 	template <class T> inline constexpr INT_N operator/(T x) requires std::is_class<T>::value && related_to<BaseInt<decltype(T::typeof())>, T> {
-		if (static_cast<decltype(T::typeof())>(x) == 0) throw std::domain_error("Division by zero is undefined.");
+		if (static_cast<decltype(T::typeof())>(x) == 0) throw ERROR::DIVISION_BY_ZERO;
 		return static_cast<INT_N>(self / static_cast<decltype(T::typeof())>(x));
 	}
 	inline constexpr INT_N operator/(integer_t auto x) {
-		if (x == 0) throw std::domain_error("Division by zero is undefined.");
+		if (x == 0) throw ERROR::DIVISION_BY_ZERO;
 		return static_cast<INT_N>(self / x);
 	}
 	inline constexpr INT_N operator/(fraction_t auto x) {
-		if (x == 0) throw std::domain_error("Division by zero is undefined.");
+		if (x == 0) throw ERROR::DIVISION_BY_ZERO;
 		return static_cast<INT_N>(std::round(self / x));
 	}
 	/* --- Exponentiation --- */
@@ -158,20 +153,20 @@ template <integer_t INT_N> struct BaseInt {
 	}
 	/* --- Pre-increment/decrement --- */
 	inline constexpr INT_N operator++(void) {
-		if (outtarange(self + 1)) std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(self + 1)) throw ERROR::OVERFLOW;
 		return ++self;
 	}
 	inline constexpr INT_N operator--(void) {
-		if (outtarange(self - 1)) std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(self - 1)) throw ERROR::OVERFLOW;
 		return --self;
 	}
 	/* --- Post-increment/decrement --- */
 	inline constexpr INT_N operator++(auto) {
-		if (outtarange(self + 1)) std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(self + 1)) throw ERROR::OVERFLOW;
 		return self++;
 	}
 	inline constexpr INT_N operator--(auto) {
-		if (outtarange(self - 1)) std::overflow_error("Attempt to assign a value results in an overflow.");
+		if (outtarange(self - 1)) throw ERROR::OVERFLOW;
 		return self--;
 	}
 	/* --- Comparison --- */
@@ -216,9 +211,8 @@ template <integer_t INT_N> struct BaseInt {
 private:
 	INT_N self;
 	inline constexpr auto maxval(void) noexcept {
-		INT_N x = 0;
-		auto p = std::exp2(sizeof(x) * 8);
-		return ((decltype(x))(x - 1) == p - 1) ? p - 1 : p/2 - 1;
+		auto p = std::exp2(sizeof(self) * 8);
+		return (static_cast<INT_N>(-1) == p - 1) ? p - 1 : p/2 - 1;
 	}
 	inline constexpr bool outtarange(unsigned_t auto x) noexcept {
 		return (x > maxval()) ? true : false;

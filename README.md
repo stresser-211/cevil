@@ -1,16 +1,13 @@
 ﻿# --- swang swung ---
-This monstrosity of a code is presumably going to be some sort of a TBS game, being made from scratch for some enigmatic reason.\
-Status: *compiles. not sure about the rest.*
+Turn-based strategy, idk.\
+Status: *compiles, not sure about the rest.*
 ___
 ## Contributors:
-- `rhisth` — original repository owner.
+- `rhisth` — owns the repository, that's it.
 - `StresseR` — lazy dev.
-- `*You could be here*` — but you aren't.
+- `???`
 ___
 ## TODO:
-- enhanced logs
-- error codes
-- configuration file parser revision
 - cubic-bezier interpreter
 - window class rework
 - concurrency
@@ -43,8 +40,7 @@ ___
 - main campaign
 - achievements
 - client/server: TCP connection, authorization, player db (MariaDB)
-- text processing: everything to unicode (UTF-8)
+- text processing: everything to unicode (UTF-8), symbol limit (256 per message)
 - multiplayer
 - anticheat?
 ___
-# UNIT TESTS PLEASE

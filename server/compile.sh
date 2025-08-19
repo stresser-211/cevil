@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 options=(
 	--target es2022
 	--module es2022
@@ -14,6 +14,8 @@ options=(
 	--newLine crlf
 	--noErrorTruncation
 )
-tsc "${options[@]}" --outDir ./include ./module/type_traits.ts
-tsc "${options[@]}" entry.ts
-./autorun
+
+# --- Set your own path --- #
+path="../../server-nodejs-v20.17.0/server"
+
+tsc "${options[@]}" --outDir "${path}" ./encrypt.ts ./server.ts ./entry.ts

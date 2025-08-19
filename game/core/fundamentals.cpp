@@ -34,18 +34,18 @@ extern "C++" {
 		texture::~texture(void) {
 			SDL_DestroyTexture(txtr);
 		}
-		void texture::stretch(int h, int v) {
+		void texture::stretch(Int32T h, Int32T v) {
 			//...
 		}
-		void texture::crop(unsigned left, unsigned right, unsigned up, unsigned down) {
+		void texture::crop(Uint32T left, Uint32T right, Uint32T up, Uint32T down) {
 			//...
 		}
-		void texture::colmod(uint16_t hue, uint8_t saturation, uint8_t visibility) {
+		void texture::colmod(Uint16T hue, Uint8T saturation, Uint8T visibility) {
 			//...
 		}
 		audio_chunk::audio_chunk(std::string_view path) {
 			if (!(chunk = Mix_LoadWAV(path.data()))) {
-				stacktrace(gl::mod.error, SDL_GetError());
+				//stacktrace(MODULE::ASIO, SDL_GetError());
 			}
 		}
 	}

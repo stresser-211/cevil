@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "../internal/include.hpp"
-#include <SDL2/SDL_net.h>
+#include "../internal/include"
 extern "C" {
 	int API init_client(void);
 }

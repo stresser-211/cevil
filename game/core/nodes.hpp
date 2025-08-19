@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../internal/include.hpp"
+#include "../internal/include"
 #include "sdl.hpp"
 extern "C++" {
 	namespace node {

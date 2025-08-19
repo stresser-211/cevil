@@ -16,16 +16,13 @@ extern "C++" {
 			return window(title.data(), width, height, flags);
 		}
 		window API make_window(std::string_view title, Uint16T width, Uint16T height) {
-			using namespace gl;
-			return window(title.data(), width, height, ((bool)config[ecfg::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
+			return window(title.data(), width, height, (config[(int)CFG::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
 		}
 		window API make_window(std::string_view title, SDL_WindowFlags flags) {
-			using namespace gl;
-			return window(title.data(), config[ecfg::WIDTH].second, config[ecfg::HEIGHT].second, flags);
+			return window(title.data(), config[(int)CFG::WIDTH].second, config[(int)CFG::HEIGHT].second, flags);
 		}
 		window API make_window(std::string_view title) {
-			using namespace gl;
-			return window(title.data(), config[ecfg::WIDTH].second, config[ecfg::HEIGHT].second, ((bool)config[ecfg::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
+			return window(title.data(), config[(int)CFG::WIDTH].second, config[(int)CFG::HEIGHT].second, (config[(int)CFG::FSCR].second ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS));
 		}
 		void window::update(void) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
